@@ -8,11 +8,15 @@ networks:
 services:
   portainer:
     image: portainer/portainer-ce:latest
-    ports:
-      - 9443:9443
+    expose:
+      - 9000
     volumes:
       - ./data:/data
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
     networks:
       - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portainer.rule=Host(`portainer.queerreferat.ac`)"
+      - "treafik.http.services.portainer.loadbalancer.server.port=9000"
