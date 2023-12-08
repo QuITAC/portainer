@@ -9,7 +9,7 @@ services:
   portainer:
     image: portainer/portainer-ce:latest
     expose:
-      - 9000
+      - 9443
     volumes:
       - ./data:/data
       - /var/run/docker.sock:/var/run/docker.sock
@@ -18,5 +18,12 @@ services:
       - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.portainer.rule=Host(`portainer.queerreferat.ac`)"
-      - "treafik.http.services.portainer.loadbalancer.server.port=9000"
+      - "traefik.http.routers.pt-frontend.rule=Host(`portainer.queerreferat.ac`)"
+      - "traefik.http.routers.pt-frontend.entrypoints=websecure"
+      - "treafik.http.services.pt-frontend.loadbalancer.server.port=9443"
+      - "traefik.http.routers.pt-frontend.service=pt-frontend"
+
+      - "traefik.http.routers.pt-edge.rule=Host(`portainer-edge.queerreferat.ac`)"
+      - "traefik.http.routers.pt-edge.entrypoints=websecure"
+      - "treafik.http.services.pt-edge.loadbalancer.server.port=8000"
+      - "traefik.http.routers.pt-edge.service=pt-edge"
